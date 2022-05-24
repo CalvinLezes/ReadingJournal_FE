@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BookList from "../Components/books/BookList";
-import classes from "./AddButton.module.css"
+import BookList from "../../Components/books/BookList";
+import bookApi from "../../Components/services/BookService";
+import classes from "../AddButton.module.css"
 
 function AllBooksPage() {
   const navigate = useNavigate();
@@ -12,9 +12,19 @@ function AllBooksPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadedBooks, setLoadedBooks] = useState([]);
 
+  function DeleteBook(bookId) {
+    bookApi.deleteBook(bookId).then(() => {
+      setLoadedBooks((oldBooks) => {
+        return oldBooks.filter((book) => {
+          return book.bookId !== bookId;
+        });
+      });
+    });
+  }
+
   useEffect(() => {
     setIsLoading(true);
-    axios.get("http://localhost:8080/api/books").then((resp) => {
+    bookApi.getBooks().then((resp) => {
       console.log(resp);
       setIsLoading(false);
       setLoadedBooks(resp.data);
@@ -32,7 +42,7 @@ function AllBooksPage() {
     <section>
       <h1>All Books</h1>
       <button className={classes.add_btn} onClick={AddBookHandler}>Add New Book</button>
-      <BookList books={loadedBooks} />
+      <BookList books={loadedBooks} onDelete={DeleteBook}/>
     </section>
   );
 }

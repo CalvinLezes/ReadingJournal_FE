@@ -6,11 +6,10 @@ function AuthorList(props) {
     <List>
       {props.authors.map((author) => (
         <AuthorItem
-          key={author.id}
-          id={author.id}
+          key={author.authorId}
+          id={author.authorId}
           name={author.name}
-          surname={author.surname}
-         // country={author.country}
+          
         />
       ))}
     </List>

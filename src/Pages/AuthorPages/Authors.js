@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import AuthorList from "../Components/authors/AuthorList";
+import AuthorList from "../../Components/authors/AuthorList";
+import Loading from "../Loading";
 
 function AllAuthorsPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -17,9 +18,7 @@ function AllAuthorsPage() {
 
   if (isLoading) {
     return (
-      <section>
-        <p>Loading...</p>
-      </section>
+      <Loading/>
     );
   }
   return (

@@ -2,18 +2,12 @@ import { useRef, useState } from "react";
 import Card from "../ui/Card";
 import Select from "react-select";
 import classes from "../ui/Form.module.css";
-import { useNavigate } from "react-router-dom";
 
-function NewBookForm(props) {
-  const navigate = useNavigate();
+function EditBookForm(props) {
   const titleInputRef = useRef();
   const ratingInputRef = useRef();
   const feedbackInputRef = useRef();
   const dateInputRef = useRef();
-
-  function addAuthorHandler(){
-    navigate("/newAuthor");
-  }
 
   function submitHandler(event) {
     event.preventDefault();
@@ -40,8 +34,13 @@ function NewBookForm(props) {
     props.onAddBook(bookData);
   }
 
-  const [authorValue, setAuthorValue] = useState([]);
-  const [genreValue, setGenreValue] = useState([]);
+  const [authorValue, setAuthorValue] = useState(props.book.authors.map((author)=>{
+     return {value:author.name, label: author.name, key:author.authorId}
+  }));
+
+  const [genreValue, setGenreValue] = useState(props.book.genres.map((genre) => {
+    return { value: genre.name, label: genre.name, key: genre.genreId };
+  }));
 
   const authorOptions = props.authors.map((author) => {
     return { value: author.name, label: author.name, key: author.authorId};
@@ -56,7 +55,7 @@ function NewBookForm(props) {
       <form className={classes.form} onSubmit={submitHandler}>
         <div className={classes.control}>
           <label htmlFor="title">Название</label>
-          <input type="text" required id="title" ref={titleInputRef} />
+          <input type="text" required id="title" defaultValue={props.book.title} ref={titleInputRef} />
         </div>
         <div>
           <label htmlFor="authors">Выберите авторов</label>
@@ -72,7 +71,6 @@ function NewBookForm(props) {
             className="basic-multi-select"
             classNamePrefix="select"
           />
-          <button onClick={addAuthorHandler}>+ Новый автор</button>
         </div>
         <div>
           <label htmlFor="genres">Выберите жанры</label>
@@ -90,7 +88,7 @@ function NewBookForm(props) {
         </div>
         <div className={classes.control}>
           <label htmlFor="date">Дата прочтения</label>
-          <input type="date" required id="date" ref={dateInputRef} />
+          <input type="date" required id="date" defaultValue={props.book.readDate} ref={dateInputRef} />
         </div>
         <div className={classes.control}>
           <label htmlFor="rating">Ваша оценка (от 1 до 5)</label>
@@ -100,12 +98,13 @@ function NewBookForm(props) {
             id="rating"
             min="1"
             max="5"
+            defaultValue={props.book.rating}
             ref={ratingInputRef}
           />
         </div>
         <div className={classes.control}>
           <label htmlFor="feedback">Ваш отзыв</label>
-          <textarea id="feedback" required rows="5" ref={feedbackInputRef} />
+          <textarea id="feedback" required rows="5" defaultValue={props.book.feedback} ref={feedbackInputRef} />
         </div>
         <div className={classes.actions}>
           <button>Добавить книгу</button>
@@ -115,4 +114,4 @@ function NewBookForm(props) {
   );
 }
 
-export default NewBookForm;
+export default EditBookForm;
